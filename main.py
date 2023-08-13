@@ -1,16 +1,20 @@
+import os
+
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
+from dotenv import load_dotenv
 
-# Configurar credenciales
-client_id = '1a3a71a5b9ad46a08c9ec452c037a747'
-client_secret = 'kjasñdlkfja9387w983s82kjshsj'
+load_dotenv()
+
+client_id = os.environ.get('SPOTIFY_CLIENT_ID')
+client_secret = os.environ.get('SPOTIFY_CLIENT_SECRET')
 
 # Autenticación
 client_credentials_manager = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
 sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
 # Haz una solicitud a la API, por ejemplo, buscar un álbum
-results = sp.search(q='album:Abbey Road artist:The Beatles', type='album')
+results = sp.search(q='album:A Night at the Opera artist:Queen', type='album')
 albums = results['albums']['items']
 
 for album in albums:
