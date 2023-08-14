@@ -170,6 +170,25 @@ def conectar_bd(archivo_bd):
         return None
 
 
+def existe_tabla(conexion, nombre_tabla):
+    """
+    Verifica si una tabla existe en la base de datos.
+
+    Args:
+    - conexion: Conexión a la base de datos SQLite.
+    - nombre_tabla (str): Nombre de la tabla a verificar.
+
+    Returns:
+    - bool: True si la tabla existe, False en caso contrario.
+    """
+    
+    cursor = conn.cursor()
+    cursor.execute('''SELECT count(name) FROM sqlite_master WHERE type='table' AND name=?''', (nombre_tabla,))
+    
+    # Si el conteo es 1, la tabla existe. Si es 0, no existe.
+    return cursor.fetchone()[0] == 1
+
+
 def almacenar_episodio(conexion, episodio: Episodio):
     """
     Almacena un episodio en la base de datos.
