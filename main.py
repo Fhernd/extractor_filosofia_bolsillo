@@ -1,4 +1,5 @@
 import os
+import sqlite3
 
 import requests
 import spotipy
@@ -148,6 +149,24 @@ def extraer_episodios_podcast(podcast_id, search, access_token):
         offset = offset + 50
     
     return episodios
+
+
+def conectar_bd(archivo_bd):
+    """
+    Conecta con la base de datos.
+
+    Args:
+        archivo_bd (str): Nombre del archivo de la base de datos.
+    
+    Returns:
+        sqlite3.Connection: Conexión con la base de datos.
+    """
+    try:
+        conexion = sqlite3.connect(archivo_bd)
+
+        return conexion
+    except sqlite3.Error as e:
+        return None
 
 
 def main():
