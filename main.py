@@ -169,6 +169,33 @@ def conectar_bd(archivo_bd):
         return None
 
 
+def almacenar_episodio(conexion, episodio: Episodio):
+    """
+    Almacena un episodio en la base de datos.
+
+    Args:
+        conexion (sqlite3.Connection): Conexión con la base de datos.
+        episodio (Episodio): Episodio a almacenar.
+    """
+    try:
+        cursor = conexion.cursor()
+
+        cursor.execute('''
+            INSERT INTO episodios (song_id, duration_ms, release_date, name, description)
+            VALUES (?, ?, ?, ?, ?)
+        ''', (
+            episodio.song_id,
+            episodio.duration_ms,
+            episodio.release_date,
+            episodio.name,
+            episodio.description
+        ))
+
+        conexion.commit()
+    except sqlite3.Error as e:
+        print(e)
+
+
 def main():
     client_id, client_secret = obtener_claves_secretas()
     sp, access_token = iniciar_sesion_spotify(client_id, client_secret)
