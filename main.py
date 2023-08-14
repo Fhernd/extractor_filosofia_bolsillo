@@ -181,7 +181,7 @@ def almacenar_episodio(conexion, episodio: Episodio):
         cursor = conexion.cursor()
 
         cursor.execute('''
-            INSERT INTO episodios (song_id, duration_ms, release_date, name, description)
+            INSERT INTO episodio (song_id, duration_ms, release_date, name, description)
             VALUES (?, ?, ?, ?, ?)
         ''', (
             episodio.song_id,
