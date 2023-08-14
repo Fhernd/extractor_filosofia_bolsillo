@@ -1,6 +1,5 @@
 import os
 
-import requests
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 from dotenv import load_dotenv
@@ -14,20 +13,20 @@ client_secret = os.environ.get('SPOTIFY_CLIENT_SECRET')
 client_credentials_manager = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
 sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
-token_info = client_credentials_manager.get_access_token(as_dict=False)
+# Dame el listado de episodios del podcast con ID 768GVwxeh1o6kD5bD0qJeJ:
+podcast_id = '768GVwxeh1o6kD5bD0qJeJ'
 
-TOKEN = token_info + 'aaaa'
-SHOW_ID = '6xpiit8aJmwDHk1rKdxmri'
+episodios = sp.show_episodes(podcast_id)
 
-headers = {
-    "Authorization": f"Bearer {TOKEN}"
-}
+for episodio in episodios['items']:
+    print(episodio['name'])
 
-response = requests.get(f"https://api.spotify.com/v1/shows/6xpiit8aJmwDHk1rKdxmri/episodes", headers=headers)
 
-print(response.status_code)
-
-if response.status_code == 200:
-    episodes = response.json().get('items', [])
-    for episode in episodes:
-        print(episode['name'])
+def get_podcast_episodes(podcast_id):
+    episodes = []
+    results = sp.show_episodes(podcast_id)
+    episodes.extend(results['items'])
+    while results['next']:
+        results = sp.next(results)
+        episodes.extend(results['items'])
+    return episodes
