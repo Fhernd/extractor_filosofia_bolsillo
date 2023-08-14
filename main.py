@@ -216,6 +216,31 @@ def almacenar_episodio(conexion, episodio: Episodio):
         print(e)
 
 
+def crear_tabla_episodio(conexion):
+    """
+    Crea la tabla de episodios en la base de datos.
+
+    Args:
+        conexion (sqlite3.Connection): Conexión con la base de datos.
+    """
+    try:
+        cursor = conexion.cursor()
+
+        cursor.execute('''
+            CREATE TABLE episodio (
+                song_id TEXT PRIMARY KEY,
+                duration_ms INTEGER,
+                release_date TEXT,
+                name TEXT,
+                description TEXT
+            )
+        ''')
+
+        conexion.commit()
+    except sqlite3.Error as e:
+        print(e)
+
+
 def main():
     parser = argparse.ArgumentParser(description="Procesar argumentos del script.")
     parser.add_argument("-c", "--clave_busqueda", help="Clave de búsqueda para el episodio.")
@@ -235,7 +260,10 @@ def main():
 
     if len(episodios):
 
-        conexion = conectar_bd('filosofía_bolsillo_episodios.db')
+        conexion = conectar_bd(nombre_db)
+
+        if not existe_tabla(conexion, 'episodio'):
+            crear_tabla_episodio(conexion)
 
         for episodio in episodios:
             almacenar_episodio(conexion, episodio)
