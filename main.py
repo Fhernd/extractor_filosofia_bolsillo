@@ -37,7 +37,7 @@ def iniciar_sesion_spotify(client_id, client_secret):
     client_credentials_manager = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
     sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
-    return sp
+    return sp, client_credentials_manager.get_access_token(as_dict=False)
 
 
 def extraer_episodios_podcast(podcast_id, search, access_token):
@@ -112,8 +112,17 @@ def extraer_episodios_podcast(podcast_id, search, access_token):
     }
 
 
+def main():
+    client_id, client_secret = obtener_claves_secretas()
+    sp, access_token = iniciar_sesion_spotify(client_id, client_secret)
 
-search = 'Filosofía de bolsillo'
-podcast_id = '768GVwxeh1o6kD5bD0qJeJ'
+    search = 'Filosofía de bolsillo'
+    podcast_id = '768GVwxeh1o6kD5bD0qJeJ'
 
-access_token = client_credentials_manager.get_access_token(as_dict=False)
+    resultado = extraer_episodios_podcast(podcast_id, search, access_token)
+
+    print(resultado.keys())
+
+
+if __name__ == '__main__':
+    main()
