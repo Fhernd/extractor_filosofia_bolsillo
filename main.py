@@ -22,7 +22,7 @@ def obtener_claves_secretas():
     return client_id, client_secret
 
 
-def iniciar_sesion_spotif(client_id, client_secret):
+def iniciar_sesion_spotify(client_id, client_secret):
     """
     Inicia sesión en Spotify.
 
@@ -40,65 +40,80 @@ def iniciar_sesion_spotif(client_id, client_secret):
     return sp
 
 
-# Dame el listado de episodios del podcast con ID 768GVwxeh1o6kD5bD0qJeJ:
-podcast_id = '768GVwxeh1o6kD5bD0qJeJ'
+def extraer_episodios_podcast(podcast_id, search, access_token):
+    """
+    Extrae los episodios de un podcast.
 
-token_info = client_credentials_manager.get_access_token(as_dict=False)
-access_token = token_info
+    Args:
+        podcast_id (str): ID del podcast.
+        search (str): Término de búsqueda.
+        access_token (str): Token de acceso de Spotify.
+    
+    Returns:
+        dict: Diccionario con los datos de los episodios.
+    """
+    id = podcast_id
+    type = 'episodes'
+    market  = 'US'
+    limit = 50
+    offset = 0
 
-id = '768GVwxeh1o6kD5bD0qJeJ'       #<------------------------------------ INSERT SHOW ID MANUALLY
-type = 'episodes'
-market  = 'US'
-limit = 50
-offset = 0
+    id_list = []
+    dur_list = []
+    date_list = []
+    name_list = []
+    desc_list = []
 
-id_list = []
-dur_list = []
-date_list = []
-name_list = []
-desc_list = []
+    counter = 0
+    more_runs = 1
 
-counter = 0
-more_runs = 1
+    
+
+    while(counter <= more_runs):
+        endpoint_url = f"https://api.spotify.com/v1/shows/{id}/episodes?"
+
+
+        query = f'{endpoint_url}'
+        query += f'&q={search}'
+        query += f'&type={type}'
+        query += f'&offset={offset}'
+        query += f'&market={market}'
+        query += f'&limit={limit}'
+
+
+        response = requests.get(query, 
+                    headers={"Content-Type":"application/json", 
+                                "Authorization":f"Bearer {access_token}"})
+        json_response = response.json()
+
+
+
+        for i in range(len(json_response['items'])):
+
+            id_list.append(json_response['items'][i]['id'])
+            dur_list.append(json_response['items'][i]['duration_ms'])
+            date_list.append(json_response['items'][i]['release_date'])    
+            name_list.append(json_response['items'][i]['name'])
+            desc_list.append(json_response['items'][i]['description'])
+            
+            
+        more_runs = (json_response['total'] // 50 )         
+            
+        counter += 1
+        
+        offset = offset + 50
+    
+    return {
+        'id': id_list,
+        'duration': dur_list,
+        'date': date_list,
+        'name': name_list,
+        'description': desc_list
+    }
+
+
 
 search = 'Filosofía de bolsillo'
+podcast_id = '768GVwxeh1o6kD5bD0qJeJ'
 
-while(counter <= more_runs):
-
-
-    endpoint_url = f"https://api.spotify.com/v1/shows/{id}/episodes?"
-
-
-    query = f'{endpoint_url}'
-    query += f'&q={search}'
-    query += f'&type={type}'
-    query += f'&offset={offset}'
-    query += f'&market={market}'
-    query += f'&limit={limit}'
-
-
-    response = requests.get(query, 
-                   headers={"Content-Type":"application/json", 
-                            "Authorization":f"Bearer {access_token}"})
-    json_response = response.json()
-
-
-
-    for i in range(len(json_response['items'])):
-
-        id_list.append(json_response['items'][i]['id'])
-        dur_list.append(json_response['items'][i]['duration_ms'])
-        date_list.append(json_response['items'][i]['release_date'])    
-        name_list.append(json_response['items'][i]['name'])
-        desc_list.append(json_response['items'][i]['description'])
-        
-        
-    more_runs = (json_response['total'] // 50 )         
-        
-    counter += 1
-    
-    offset = offset + 50 
-
-for n in name_list:
-    print(n)
-    print()
+access_token = client_credentials_manager.get_access_token(as_dict=False)
