@@ -22,11 +22,23 @@ def obtener_claves_secretas():
     return client_id, client_secret
 
 
+def iniciar_sesion_spotif(client_id, client_secret):
+    """
+    Inicia sesión en Spotify.
 
+    Args:
+        client_id (str): ID de la aplicación de Spotify.
+        client_secret (str): Clave secreta de la aplicación de Spotify.
+    
+    Returns:
+        sp (spotipy.client.Spotify): Objeto de sesión de Spotify.
+    """
+    
+    client_credentials_manager = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
+    sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
-# Autenticación
-client_credentials_manager = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
-sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
+    return sp
+
 
 # Dame el listado de episodios del podcast con ID 768GVwxeh1o6kD5bD0qJeJ:
 podcast_id = '768GVwxeh1o6kD5bD0qJeJ'
