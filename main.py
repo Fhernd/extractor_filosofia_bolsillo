@@ -1,3 +1,4 @@
+import argparse
 import os
 import sqlite3
 
@@ -197,13 +198,21 @@ def almacenar_episodio(conexion, episodio: Episodio):
 
 
 def main():
+    parser = argparse.ArgumentParser(description="Procesar argumentos del script.")
+    parser.add_argument("-c", "--clave_busqueda", help="Clave de búsqueda para el episodio.")
+    parser.add_argument("-i", "--id_podcast", help="ID único del podcast.")
+    parser.add_argument("-n", "--nombre_db", help="Nombre del archivo de la base de datos. Por defecto es 'base_datos.sqlite'.")
+
+    args = parser.parse_args()
+
+    clave_busqueda = args.clave_busqueda
+    podcast_id = args.id_podcast
+    nombre_db = args.nombre_db
+    
     client_id, client_secret = obtener_claves_secretas()
     sp, access_token = iniciar_sesion_spotify(client_id, client_secret)
 
-    search = 'Filosofía de bolsillo'
-    podcast_id = '768GVwxeh1o6kD5bD0qJeJ'
-
-    episodios = extraer_episodios_podcast(podcast_id, search, access_token)
+    episodios = extraer_episodios_podcast(podcast_id, clave_busqueda, access_token)
 
     if len(episodios):
 
