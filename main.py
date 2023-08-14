@@ -182,7 +182,7 @@ def existe_tabla(conexion, nombre_tabla):
     - bool: True si la tabla existe, False en caso contrario.
     """
     
-    cursor = conn.cursor()
+    cursor = conexion.cursor()
     cursor.execute('''SELECT count(name) FROM sqlite_master WHERE type='table' AND name=?''', (nombre_tabla,))
     
     # Si el conteo es 1, la tabla existe. Si es 0, no existe.
