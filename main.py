@@ -6,6 +6,48 @@ from spotipy.oauth2 import SpotifyClientCredentials
 from dotenv import load_dotenv
 
 
+
+class Episodio:
+    """
+    Representa un episodio de un podcast.
+    """
+    def __init__(self, song_id, duration_ms, release_date, name, description):
+        """
+        Inicializa un episodio.
+
+        Args:
+            song_id (str): ID del episodio.
+            duration_ms (int): Duración del episodio en milisegundos.
+            release_date (str): Fecha de lanzamiento del episodio.
+            name (str): Nombre del episodio.
+            description (str): Descripción del episodio.
+        """
+        
+        self.song_id = song_id
+        self.duration_ms = duration_ms
+        self.release_date = release_date
+        self.name = name
+        self.description = description
+    
+    def __str__(self):
+        """
+        Devuelve una representación en string del episodio.
+
+        Returns:
+            str: Representación en string del episodio.
+        """
+        return f"Episodio(id={self.song_id}, duration={self.duration_ms}, release_date={self.release_date}, name='{self.name}', description='{self.description}')"
+
+    def __repr__(self):
+        """
+        Devuelve una representación en string del episodio.
+
+        Returns:
+            str: Representación en string del episodio.
+        """
+        return self.__str__()
+
+
 def obtener_claves_secretas():
     """
     Obtiene las claves secretas de Spotify desde un archivo .env.
@@ -121,8 +163,13 @@ def main():
 
     resultado = extraer_episodios_podcast(podcast_id, search, access_token)
 
-    print(resultado.keys())
+    descripciones = resultado['description']
 
+    for d in descripciones:
+        print(d)
+        print('---')
+
+    print(len(descripciones))
 
 if __name__ == '__main__':
     main()
