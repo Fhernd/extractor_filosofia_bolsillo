@@ -205,7 +205,17 @@ def main():
 
     episodios = extraer_episodios_podcast(podcast_id, search, access_token)
 
-    print(len(episodios))
+    if len(episodios):
+
+        conexion = conectar_bd('filosofía_bolsillo_episodios.db')
+
+        for episodio in episodios:
+            almacenar_episodio(conexion, episodio)
+
+        conexion.close()
+        
+    else:
+        print('No se encontraron episodios.')
 
 if __name__ == '__main__':
     main()
