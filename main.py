@@ -109,7 +109,7 @@ def extraer_episodios_podcast(podcast_id, search, access_token):
     counter = 0
     more_runs = 1
 
-    
+    episodios = []
 
     while(counter <= more_runs):
         endpoint_url = f"https://api.spotify.com/v1/shows/{id}/episodes?"
@@ -132,12 +132,14 @@ def extraer_episodios_podcast(podcast_id, search, access_token):
 
         for i in range(len(json_response['items'])):
 
-            id_list.append(json_response['items'][i]['id'])
-            dur_list.append(json_response['items'][i]['duration_ms'])
-            date_list.append(json_response['items'][i]['release_date'])    
-            name_list.append(json_response['items'][i]['name'])
-            desc_list.append(json_response['items'][i]['description'])
-            
+            episodio = Episodio(
+                song_id=json_response['items'][i]['id'],
+                duration_ms=json_response['items'][i]['duration_ms'],
+                release_date=json_response['items'][i]['release_date'],
+                name=json_response['items'][i]['name'],
+                description=json_response['items'][i]['description']
+            )
+            episodios.append(episodio)
             
         more_runs = (json_response['total'] // 50 )         
             
@@ -145,13 +147,7 @@ def extraer_episodios_podcast(podcast_id, search, access_token):
         
         offset = offset + 50
     
-    return {
-        'id': id_list,
-        'duration': dur_list,
-        'date': date_list,
-        'name': name_list,
-        'description': desc_list
-    }
+    return episodios
 
 
 def main():
