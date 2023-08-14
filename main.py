@@ -5,10 +5,24 @@ import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 from dotenv import load_dotenv
 
-load_dotenv()
 
-client_id = os.environ.get('SPOTIFY_CLIENT_ID')
-client_secret = os.environ.get('SPOTIFY_CLIENT_SECRET')
+def obtener_claves_secretas():
+    """
+    Obtiene las claves secretas de Spotify desde un archivo .env.
+
+    Returns:
+        client_id (str): ID de la aplicación de Spotify.
+        client_secret (str): Clave secreta de la aplicación de Spotify.
+    """
+    load_dotenv()
+
+    client_id = os.environ.get('SPOTIFY_CLIENT_ID')
+    client_secret = os.environ.get('SPOTIFY_CLIENT_SECRET')
+
+    return client_id, client_secret
+
+
+
 
 # Autenticación
 client_credentials_manager = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
