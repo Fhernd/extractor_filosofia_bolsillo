@@ -157,15 +157,9 @@ def main():
     search = 'Filosofía de bolsillo'
     podcast_id = '768GVwxeh1o6kD5bD0qJeJ'
 
-    resultado = extraer_episodios_podcast(podcast_id, search, access_token)
+    episodios = extraer_episodios_podcast(podcast_id, search, access_token)
 
-    descripciones = resultado['description']
-
-    for d in descripciones:
-        print(d)
-        print('---')
-
-    print(len(descripciones))
+    print(len(episodios))
 
 if __name__ == '__main__':
     main()
